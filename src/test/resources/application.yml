@@ -1,0 +1,4 @@
+app:
+  store:
+    directory: .
+    size-limit: 64

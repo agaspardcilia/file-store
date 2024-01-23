@@ -1,0 +1,6 @@
+app:
+  store:
+    # TODO: Put a correct path here!
+    directory: <path>
+    # 500MB
+    size-limit: 500000000

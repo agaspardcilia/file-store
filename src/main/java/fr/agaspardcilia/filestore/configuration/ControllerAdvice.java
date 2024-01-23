@@ -7,6 +7,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
+import org.springframework.web.multipart.support.MissingServletRequestPartException;
 
 import java.time.Instant;
 
@@ -15,7 +16,7 @@ import java.time.Instant;
  */
 @RestControllerAdvice
 public class ControllerAdvice {
-    private static final Logger log = LoggerFactory.getLogger(ControllerAdvice.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(ControllerAdvice.class);
 
     /**
      * Handle API exceptions.
@@ -25,10 +26,19 @@ public class ControllerAdvice {
      */
     @ExceptionHandler
     public ResponseEntity<ApiExceptionResponse> handleApiException(ApiException exception) {
-        log.debug("{}: {}", exception.getStatus(), exception.getMessage());
+        LOGGER.debug("{}: {}", exception.getStatus(), exception.getMessage());
 
         return new ResponseEntity<>(
                 new ApiExceptionResponse(exception.getStatus(), exception.getMessage()), exception.getStatus()
+        );
+    }
+
+    @ExceptionHandler
+    public ResponseEntity<ApiExceptionResponse> handleMissingPartException(MissingServletRequestPartException exception) {
+        LOGGER.debug("Multipart exception", exception);
+
+        return new ResponseEntity<>(
+                new ApiExceptionResponse(HttpStatus.BAD_REQUEST, exception.getMessage()), HttpStatus.BAD_REQUEST
         );
     }
 
